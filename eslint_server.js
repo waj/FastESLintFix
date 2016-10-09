@@ -16,4 +16,4 @@ server.on('listening', () => {
   console.log(server.address().port)
 })
 
-server.listen();
+server.listen(0, 'localhost');
