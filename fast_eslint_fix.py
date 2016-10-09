@@ -31,6 +31,7 @@ class EslintServer:
     conn = http.client.HTTPConnection("localhost", self.port)
     conn.request("POST", "/", text)
     body = conn.getresponse().read().decode('UTF-8')
+    conn.close()
     return json.loads(body)
 
 def server_for_folder(folder):
