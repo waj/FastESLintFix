@@ -20,11 +20,11 @@ class EslintServer:
     server_cmd = ["node", PLUGIN_PATH + "/eslint_server.js"]
 
     self.proc = subprocess.Popen(server_cmd, stdout = subprocess.PIPE, stderr = subprocess.PIPE, env = env, cwd = folder)
-    print("Created " + str(self.proc.pid))
     self.port = int(self.proc.stdout.readline())
+    print("Started ESLint server (pid: %d, port: %d)" % (self.proc.pid, self.port))
 
   def close(self):
-    print("Killing " + str(self.proc.pid))
+    print("Killing ESLint server (pid: %d)" % self.proc.pid)
     self.proc.kill()
 
   def execute(self, text):
@@ -36,7 +36,7 @@ class EslintServer:
 
 def server_for_folder(folder):
   if folder not in servers:
-    print("Not found for " + folder)
+    print("ESLint server not found for directory " + folder)
     servers[folder] = EslintServer(folder)
 
   return servers[folder]
