@@ -1,0 +1,6 @@
+[
+  {
+    "caption": "Fast ESLint Fix: Format this file",
+    "command": "fast_eslint_format"
+  }
+]
