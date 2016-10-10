@@ -1,0 +1,26 @@
+{
+  "name": "fast_eslint_fix",
+  "version": "0.0.1",
+  "description": "Sublime plugin to format JavaScript files using ESLint",
+  "main": "eslint_server.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/waj/FastESLintFix.git"
+  },
+  "keywords": [
+    "sublime",
+    "eslint"
+  ],
+  "author": "Juan Wajnerman <waj@manas.tech>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/waj/FastESLintFix/issues"
+  },
+  "homepage": "https://github.com/waj/FastESLintFix#readme",
+  "devDependencies": {
+    "eslint": "^3.7.1",
+    "eslint-config-standard": "^6.2.0",
+    "eslint-plugin-promise": "^3.0.0",
+    "eslint-plugin-standard": "^2.0.1"
+  }
+}
