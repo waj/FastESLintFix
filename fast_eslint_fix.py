@@ -15,6 +15,7 @@ def plugin_unloaded():
 
 class EslintServer:
   def __init__(self, folder):
+    self.folder = folder
     env = os.environ.copy()
     if "NODE_PATH" in env:
       env["NODE_PATH"] = folder + "/node_modules:" + env["NODE_PATH"]
@@ -32,11 +33,16 @@ class EslintServer:
     self.proc.kill()
 
   def execute(self, text):
-    conn = http.client.HTTPConnection("localhost", self.port)
-    conn.request("POST", "/", text)
-    body = conn.getresponse().read().decode('UTF-8')
-    conn.close()
-    return json.loads(body)
+    try:
+      conn = http.client.HTTPConnection("localhost", self.port)
+      conn.request("POST", "/", text)
+      body = conn.getresponse().read().decode('UTF-8')
+      conn.close()
+      return json.loads(body)
+    except:
+      del servers[self.folder]
+      raise
+
 
 def server_for_folder(folder):
   if folder not in servers:
