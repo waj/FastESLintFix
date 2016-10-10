@@ -19,7 +19,7 @@ class EslintServer:
     env["NODE_PATH"] = folder + "/node_modules"
     server_cmd = ["node", PLUGIN_PATH + "/eslint_server.js"]
 
-    self.proc = subprocess.Popen(server_cmd, stdout = subprocess.PIPE, stderr = subprocess.PIPE, env = env, cwd = folder)
+    self.proc = subprocess.Popen(server_cmd, stdin = subprocess.PIPE, stdout = subprocess.PIPE, stderr = subprocess.PIPE, env = env, cwd = folder)
     self.port = int(self.proc.stdout.readline())
     print("Started ESLint server (pid: %d, port: %d)" % (self.proc.pid, self.port))
 

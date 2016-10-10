@@ -2,6 +2,11 @@ const eslint = require('eslint');
 const http = require('http');
 const cli = new eslint.CLIEngine();
 
+process.stdin.resume()
+process.stdin.on('end', () => {
+  process.exit();
+});
+
 const server = http.createServer((req, res) => {
   var body = [];
   req.on('data', (buf) => { body.push(buf) });
