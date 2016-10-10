@@ -16,7 +16,11 @@ def plugin_unloaded():
 class EslintServer:
   def __init__(self, folder):
     env = os.environ.copy()
-    env["NODE_PATH"] = folder + "/node_modules"
+    if "NODE_PATH" in env:
+      env["NODE_PATH"] = folder + "/node_modules:" + env["NODE_PATH"]
+    else:
+      env["NODE_PATH"] = folder + "/node_modules"
+
     server_cmd = ["node", PLUGIN_PATH + "/eslint_server.js"]
 
     self.proc = subprocess.Popen(server_cmd, stdin = subprocess.PIPE, stdout = subprocess.PIPE, stderr = subprocess.PIPE, env = env, cwd = folder)
