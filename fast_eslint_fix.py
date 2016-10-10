@@ -58,21 +58,38 @@ class FastEslintFormatCommand(sublime_plugin.TextCommand):
     return "source.js" in syntax_name
 
   def run(self, edit):
-    vsize = self.view.size()
-    region = sublime.Region(0, vsize)
-    src = self.view.substr(region)
     folder = self.view.window().folders()[0]
-
     server = server_for_folder(folder)
-    messages = server.execute(src)
 
-    offset = 0
-    for msg in messages:
-      if 'fix' in msg:
-        fix = msg['fix']
-        region = sublime.Region(fix['range'][0] + offset, fix['range'][1] + offset)
-        offset += len(fix['text']) - (fix['range'][1] - fix['range'][0])
-        self.view.replace(edit, region, fix['text'])
+    # Loop at most 10 times, until there are no more fixes to apply
+    # This algorithm is inspired in the one present in `eslint` itself
+    for _ in range(10):
+      vsize = self.view.size()
+      region = sublime.Region(0, vsize)
+      src = self.view.substr(region)
+
+      try:
+        # Find only the messages that have something to fix
+        fixes = [msg['fix'] for msg in server.execute(src) if 'fix' in msg]
+        if len(fixes) == 0:
+          break
+
+        # Sort backwards
+        fixes = sorted(fixes, key = lambda msg: (msg['range'][1], msg['range'][0]), reverse = True)
+        last_fix_pos = len(src) + 1
+
+        for fix in fixes:
+          # Don't apply the fix if it overlaps with another one
+          if fix['range'][1] >= last_fix_pos:
+            continue
+          last_fix_pos = fix['range'][0]
+
+          # Apply the fix in the view
+          region = sublime.Region(fix['range'][0], fix['range'][1])
+          self.view.replace(edit, region, fix['text'])
+
+      except Exception as e:
+        sublime.error_message("Error while formatting the file: " + e.strerror)
 
 class FastEslintFixEventListener(sublime_plugin.EventListener):
   @staticmethod
